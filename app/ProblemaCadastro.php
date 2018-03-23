@@ -15,7 +15,8 @@ class ProblemaCadastro extends Model
     	
     	'problema',
     	'descricao',
-    	'status'
+    	'status', 
+    	'ativo'
     ];
 
     protected $guarded[];

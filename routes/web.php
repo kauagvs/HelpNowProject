@@ -16,4 +16,4 @@ Route::get('/', function () {
 });
 
 
-Route::resource('problema/listar_cadastros', 'ProblemaController')
+Route::resource('problema/listar_cadastros', 'ProblemaController');

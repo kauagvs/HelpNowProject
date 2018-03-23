@@ -3,82 +3,85 @@
 namespace HelpNow\Http\Controllers;
 
 use Illuminate\Http\Request;
+use HelpNow\ProblemaCadastro;
+use Illuminate\Support\Facedes\Redirect;
+use HelpNow\Http\Requests\ProblemaFormRequest;
+use DB;
 
 class ProblemaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function __construct()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function index(Request $request)
+    {
+        if ($request) {
+            $query=trim($request->get('searchText'));
+            $problemas=DB::table('problema_cadastro')
+            ->where('problema', 'LIKE', '%'.$query.'%')
+            ->where('status', '=', 'ativo')
+            ->orderBy('idproblema', 'desc')
+            ->paginate(7);
+            return view('problema.listar_cadastro', [
+                'problemas'=>$problemas, 'searchText'=>$query
+            ]);
+        }
+    }
+
+
+    public function create('problema.listar_cadastro.create')
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(ProblemaFormRequest $request)
     {
-        //
+        $problema = new ProblemaCadastro;
+        $problema->problema=$request->get('problema');
+        $problema->descricao=$request->get('descricao');
+        $problema->status=$request->get('status');
+        $problema->ativo=1;
+        $problema->save();
+        return Redirect::to('problema/listar_cadastro');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        //
+        return view('problema.listar_cadastro.show', [
+            'problema' =>ProblemaCadastro::findOrFail($id)
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        //
+        return view('problema.listar_cadastro.edit', [
+            'problema' =>ProblemaCadastro::findOrFail($id)
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(ProblemaFormRequest $request, $id)
     {
-        //
+        $problema=ProblemaCadastro::findOrFail($id);
+        $problema->problema=$request->get('problema');
+        $problema->descricao=$request->get('descricao');
+        $problema->status=$request->get('status');
+        $problema->update();
+        return Redirect::to('problema/listar_cadastro');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $problema=ProblemaCadastro::findOrFail($id);
+        $problema->problema=$request->get('problema');
+        $problema->ativo='0';
+        $problema->update();
+        return Redirect::to('problema/listar_cadastro');
     }
 }
