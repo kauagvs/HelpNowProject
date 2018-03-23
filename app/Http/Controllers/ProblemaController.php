@@ -20,21 +20,23 @@ class ProblemaController extends Controller
     {
         if ($request) {
             $query=trim($request->get('searchText'));
+            
             $problemas=DB::table('problema_cadastro')
             ->where('problema', 'LIKE', '%'.$query.'%')
-            ->where('status', '=', 'ativo')
-            ->orderBy('idproblema', 'desc')
+            ->where('ativo', '=', 1)
+            ->orderBy('idproblema', 'asc')
             ->paginate(7);
-            return view('problema.listar_cadastro', [
+
+            return view('HelpNow.ProblemaController.index', [
                 'problemas'=>$problemas, 'searchText'=>$query
             ]);
         }
     }
 
 
-    public function create('problema.listar_cadastro.create')
+    public function create()
     {
-        //
+        return Redirect::to('HelpNow.ProblemaController.create');
     }
 
 
@@ -52,7 +54,7 @@ class ProblemaController extends Controller
 
     public function show($id)
     {
-        return view('problema.listar_cadastro.show', [
+        return view('HelpNow.ProblemaController.create', [
             'problema' =>ProblemaCadastro::findOrFail($id)
         ]);
     }
@@ -60,7 +62,7 @@ class ProblemaController extends Controller
 
     public function edit($id)
     {
-        return view('problema.listar_cadastro.edit', [
+        return view('HelpNow.ProblemaController.edit', [
             'problema' =>ProblemaCadastro::findOrFail($id)
         ]);
     }

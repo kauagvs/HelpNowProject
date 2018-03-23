@@ -26,7 +26,8 @@ class ProblemaFormRequest extends FormRequest
         return [
             'problema' =>'max:256',
             'descricao' =>'max:256',
-            'status' =>'max:256'
+            'status' =>'max:256',
+            
         ];
     }
 }

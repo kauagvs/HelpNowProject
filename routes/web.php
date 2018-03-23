@@ -11,9 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('problema/listar_cadastro', 'ProblemaController');
 
+Route::resource('/', 'IndexController');
 
-Route::resource('problema/listar_cadastros', 'ProblemaController');
+Route::resource('inicio', 'HomeController');
